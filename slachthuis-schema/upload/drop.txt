@@ -1,0 +1,12 @@
+DROP SCHEMA IF EXISTS dbR09_g4 CASCADE;
+DROP TABLE IF EXISTS dbR09_g4.Administrator ;
+DROP TABLE IF EXISTS dbR09_g4.Slachthuis ;
+DROP TABLE IF EXISTS dbR09_g4.Voertuig ;
+DROP TABLE IF EXISTS dbR09_g4.Reservatie ;
+DROP TABLE IF EXISTS dbR09_g4.Slot ;
+DROP TABLE IF EXISTS dbR09_g4.Hulpdesk ;
+DROP TABLE IF EXISTS dbR09_g4.Leverancier ;
+DROP TABLE IF EXISTS dbR09_g4.Hulpdesk_Past_Reservatie_Aan ;
+DROP TABLE IF EXISTS dbR09_g4.Leverancier_Maakt_Reservatie ;
+DROP TABLE IF EXISTS dbR09_g4.Loskade ;
+DROP TABLE IF EXISTS dbR09_g4.Loskade_Bij_Voertuig ;

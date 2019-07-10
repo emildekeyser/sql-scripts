@@ -1,0 +1,45 @@
+-- Db=1TX32 
+
+set schema 'dbr09_g4'; 
+
+/*Alle leveranciers voor wie reservaties zijn aangepast met de reden, alfabetisch of naam leverancier*/ 
+SELECT l.naam, hr.reden_van_aanpassing 
+FROM leverancier l  
+INNER JOIN leverancier_maakt_reservatie lr ON l.idleverancier = lr.leverancier_idleverancier  
+INNER JOIN hulpdesk_past_reservatie_aan hr ON lr.reservatie_idreservatie = hr.reservatie_idreservatie  
+ORDER BY l.naam asc; 
+
+/*Alle voertuigen van merk iveco die voor 2006 leveringen maakten*/ 
+SELECT DISTINCT v.nummerplaat  
+FROM voertuig v  
+INNER JOIN reservatie r ON v.nummerplaat = r.voertuig_nummerplaat  
+WHERE v.merk = 'Iveco' AND EXTRACT(year from r.datum) < 2006; 
+
+/*Openingsuren van slachthuizen waar laatste op 2000-07-01 met een slotgrootte van 30 reservaties zijn geplaatst*/ 
+SELECT s.naam  
+FROM slachthuis s  
+INNER JOIN slot sl ON s.idslachthuis = sl.slachthuis_idslachthuis  
+INNER JOIN reservatie r ON sl.reservatie_idreservatie = r.idreservatie  
+WHERE r.datum = '2000-07-01' AND sl.grootte = 30; 
+
+/*Slachthuizen met capaciteit < 100 die op zondag gesloten zijn en waar de leveranciers in de opmerkingen voor hun reservatie het over kippen hebben*/  
+select distinct naam 
+from slachthuis s 
+inner join reservatie r on s.idslachthuis = r.slachthuis_idslachthuis 
+inner join leverancier_maakt_reservatie l on r.idreservatie = l.leverancier_idleverancier 
+where s.capaciteit < 100 
+and s.sluitingsdagen ILIKE '%zo%' 
+and l.opmerkingen ILIKE '%kippen%'; 
+  
+ 
+/*Gemiddelde grootte loskades van slachthuizen in met capaciteit > X*/ 
+select sum(s.capaciteit) / count(s) as gemiddelde_capaciteit_slachthuis, sum(l.grootte) / count(l) as gemiddelde_grootte_loskade 
+from slachthuis s inner join loskade l on(s.idSlachthuis = l.slachthuis_idSlachthuis) 
+where s.capaciteit > 400;
+ 
+/*Het aantal reserveringen per slachthuis waarbij het aantal reerveringen groter is dan X gesorteerd op naam van het slachthuis*/ 
+select s.naam, s.adres, count(r.idReservatie) as aantal_reservaties 
+from reservatie r inner join slachthuis s on(r.slachthuis_idSlachthuis = s.idSlachthuis) 
+group by s.idSlachthuis 
+having count(r.idReservatie) > 5 
+order by s.naam;
